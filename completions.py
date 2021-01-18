@@ -12,18 +12,11 @@ def read_token():
 
 token = read_token()
 
-def connect():
-    """ Connect to the PostgreSQL database server """
-    conn = None
-    try:
-        params = config()
+params = config()
 
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
-		
-        db = conn.cursor()
+conn = psycopg2.connect(**params)
 
-connect()
+db = conn.cursor()
 
 db.execute('''CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0''')
 
