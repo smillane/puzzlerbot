@@ -18,7 +18,7 @@ conn = psycopg2.connect(**params)
 
 db = conn.cursor()
 
-db.execute('''CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0)''')
+db.execute("""CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0)""")
 
 roles = {10:'Novice Puzzler', 50:'Apprentice Puzzler', 100:'Intermediate Puzzler', 300:'Proficient Puzzler', 600:'Expert Puzzler', 1000:'Master Puzzler'}
 
@@ -44,25 +44,25 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
-        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
+        username = db.execute("""SELECT * FROM users WHERE user_id = user_id""")
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users WHERE user_id = :user_id", user_id = userid)
+            puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = (%s)""", (userid))
             puzzles_completed = puzzles_completed + 1
-            db.execute("UPDATE users SET puzzles_completed = :completed WHERE user_id = userid", completed = puzzles_completed)
+            db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid))
             conn.commit()
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name = roles[puzzles_completed])
                 await client.add_roles(message.author, role)            
             await message.channel.send('test')
         else:
-            db.execute("INSERT INTO users (user_id, puzzles_completed) VALUES (user_id = userid, :puzzles_completed)", puzzles_completed = 1)
+            db.execute("""INSERT INTO users (puzzles_completed, user_id) VALUES (%s, %s)""", (1, userid))
             conn.commit()
             await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
-        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
+        username = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = user_id""")
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users WHERE user_id = userid")
+            puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = (%s)""", (userid))
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
