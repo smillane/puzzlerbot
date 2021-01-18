@@ -48,7 +48,7 @@ async def on_message(message):
                 role = get(message.server.roles, name = roles[puzzles_completed])
                 await client.add_roles(message.author, role)            
         else:
-            db.execute("INSERT INTO users (user_id) VALUES (:user_id)", user_id = userid)
+            db.execute("INSERT INTO users (user_id) VALUES (:user_id, :puzzles_completed)", user_id = userid, puzzles_completed = 1)
 
     if message.content.startswith('!completed'):
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
