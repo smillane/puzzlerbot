@@ -35,23 +35,25 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    userid = message.author.id
+
     if message.content.startswith('!puzzlecomplete'):
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
-        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = message.author.id)
+        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = userid)
             puzzles_completed = puzzles_completed + 1
+            db.execute("UPDATE users SET puzzles_completed = :puzzles_completed WHERE user_id = :user_id ", puzzles_completed = puzzles_completed, user_id = message.author.id)
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name = roles[puzzles_completed])
-                await client.add_roles(message.author, role)
-            db.execute("UPDATE users SET puzzles_completed = :puzzles_completed WHERE user_id = :user_id ", puzzles_completed = puzzles_completed, user_id = message.author.id)
+                await client.add_roles(message.author, role)            
         else:
-            db.execute("INSERT INTO users (user_id) VALUES (:user_id)", user_id = message.author.id)
+            db.execute("INSERT INTO users (user_id) VALUES (:user_id)", user_id = userid)
 
     if message.content.startswith('!completed'):
-        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = message.author.id)
+        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where user_id = :user_id", user_id = message.author.id)
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where user_id = :user_id", user_id = userid)
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send("You haven't completed any puzzles yet!")
