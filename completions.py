@@ -60,7 +60,7 @@ async def on_message(message):
             await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
-        username = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = user_id""")
+        username = db.execute("""SELECT * FROM users WHERE user_id = (%s)""", (userid))
         if len(username) == 1:
             puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = (%s)""", (userid))
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
