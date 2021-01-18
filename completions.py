@@ -2,6 +2,7 @@ import discord
 import os
 import psycopg2
 from discord.utils import get
+from config import config
 
 
 def read_token():
@@ -11,13 +12,18 @@ def read_token():
 
 token = read_token()
 
-conn = psycopg2.connect(user="cwahlrpovockte",
-                        password="15718ee32085c49323ddc7de80f535d8af5127cc946b6cef173cfd301f59196f",
-                        host="ec2-3-214-46-194.compute-1.amazonaws.com",
-                        port="5432",
-                        database="d9l7mk9b0uqn9d")
+def connect():
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        params = config()
 
-db = conn.cursor()
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+		
+        db = conn.cursor()
+
+connect()
 
 db.execute('''CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0''')
 
