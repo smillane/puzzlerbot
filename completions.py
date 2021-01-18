@@ -43,23 +43,23 @@ async def on_message(message):
 
     if message.content.startswith('!puzzlecomplete'):
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
-        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
+        username = db.execute("SELECT * FROM users WHERE user_id = userid")
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = userid)
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = userid")
             puzzles_completed = puzzles_completed + 1
-            db.execute("UPDATE users SET puzzles_completed = :completed WHERE user_id = :user_id ", completed = puzzles_completed, user_id = userid)
+            db.execute("UPDATE users SET puzzles_completed = :completed WHERE user_id = userid", completed = puzzles_completed)
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name = roles[puzzles_completed])
                 await client.add_roles(message.author, role)            
             await message.channel.send('test')
         else:
-            db.execute("INSERT INTO users (user_id) VALUES (:user_id, :puzzles_completed)", user_id = userid, puzzles_completed = 1)
+            db.execute("INSERT INTO users (user_id, puzzles_completed) VALUES (user_id = userid, :puzzles_completed)", puzzles_completed = 1)
             await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users WHERE user_id = :user_id", user_id = userid)
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users WHERE user_id = userid")
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
