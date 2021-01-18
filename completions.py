@@ -51,8 +51,8 @@ async def on_message(message):
             db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid))
             conn.commit()
             if roles[puzzles_completed]:
-                role = get(message.server.roles, name = roles[puzzles_completed])
-                await client.add_roles(message.author, role)            
+                role = get(message.server.roles, name=roles[puzzles_completed])
+                await userid.add_roles(role)
             await message.channel.send('test')
         else:
             db.execute("""INSERT INTO users (puzzles_completed, user_id) VALUES (%s, %s)""", (1, userid))
