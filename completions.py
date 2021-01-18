@@ -19,7 +19,7 @@ conn = psycopg2.connect(user="cwahlrpovockte",
 
 db = conn.cursor()
 
-db.execute('''CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0''')
+db.execute('''CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0''')
 
 roles = {10:'Novice Puzzler', 50:'Apprentice Puzzler', 100:'Intermediate Puzzler', 300:'Proficient Puzzler', 600:'Expert Puzzler', 1000:'Master Puzzler'}
 
