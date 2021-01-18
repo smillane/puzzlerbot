@@ -64,6 +64,7 @@ async def on_message(message):
         else:
             await message.channel.send('You have not completed any puzzles yet!')
 
+conn.commit()
 conn.close()
 
 client.run(token)
