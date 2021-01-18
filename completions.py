@@ -44,7 +44,7 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
-        username = db.execute("""SELECT * FROM users WHERE user_id = user_id""")
+        username = db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid))
         if len(username) == 1:
             puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = (%s)""", (userid))
             puzzles_completed = puzzles_completed + 1
