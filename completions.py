@@ -44,8 +44,8 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
-        username = db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
-        if len(username) == 1:
+        db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
+        if len(db.fetchone()):
             puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
             puzzles_completed = puzzles_completed + 1
             db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid))
@@ -60,8 +60,8 @@ async def on_message(message):
             await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
-        username = db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid),)
-        if len(username) == 1:
+        db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
+        if len(db.fetchone()):
             puzzles_completed = db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
