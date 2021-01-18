@@ -49,7 +49,7 @@ async def on_message(message):
             db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
             puzzles_completed = db.fetchone()
             puzzles_completed = puzzles_completed + 1
-            db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid))
+            db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid,))
             conn.commit()
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name=roles[puzzles_completed])
