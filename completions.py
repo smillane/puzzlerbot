@@ -1,6 +1,6 @@
 import discord
 import os
-import sqlite3
+import psycopg2
 from discord.utils import get
 
 
@@ -11,10 +11,15 @@ def read_token():
 
 token = read_token()
 
-conn = sqlite3.connect('completions.db')
+conn = psycopg2.connect(user="cwahlrpovockte",
+                        password="15718ee32085c49323ddc7de80f535d8af5127cc946b6cef173cfd301f59196f",
+                        host="ec2-3-214-46-194.compute-1.amazonaws.com",
+                        port="5432",
+                        database="d9l7mk9b0uqn9d")
 
 db = conn.cursor()
 
+db.execute('''CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0''')
 
 roles = {10:'Novice Puzzler', 50:'Apprentice Puzzler', 100:'Intermediate Puzzler', 300:'Proficient Puzzler', 600:'Expert Puzzler', 1000:'Master Puzzler'}
 
