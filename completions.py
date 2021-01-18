@@ -1,5 +1,4 @@
 import discord
-import os
 import psycopg2
 from discord.utils import get
 from config import config
@@ -46,25 +45,23 @@ async def on_message(message):
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
         db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
         if db.fetchone():
+            db.execute("""UPDATE users SET puzzles_completed + 1 WHERE user_id = %s""", (userid,))
+            conn.commit()
             db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
             puzzles_completed = db.fetchone()
-            puzzles_completed = puzzles_completed + 1
-            db.execute("""UPDATE users SET puzzles_completed = (%s) WHERE user_id = (%s)""", (puzzles_completed, userid,))
-            conn.commit()
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name=roles[puzzles_completed])
                 await userid.add_roles(role)
-            await message.channel.send('test')
+            await message.channel.send('plus 1!!')
         else:
             db.execute("""INSERT INTO users (puzzles_completed, user_id) VALUES (%s, %s)""", (1, userid))
             conn.commit()
             await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
-        db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
-        if db.fetchone():
-            db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
-            puzzles_completed = db.fetchone()
+        db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
+        puzzles_completed = db.fetchone()
+        if puzzles_completed:
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
