@@ -3,6 +3,14 @@ import os
 import sqlite3
 from discord.utils import get
 
+
+def read_token():
+    with open("token.txt", "r") as f:
+        lines = f.readlines()
+        return lines[0].strip()
+
+token = read_token()
+
 conn = sqlite3.connect('completions.db')
 
 db = conn.cursor()
@@ -15,6 +23,12 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+
+@client.event
+async def on_member_join(member):
+    for channel in member.guild.channels:
+        if str(channel) == "general":
+            await channel.send_message(f"""Welcome to the server {member.mention}""")
 
 @client.event
 async def on_message(message):
@@ -32,8 +46,8 @@ async def on_message(message):
 
     if message.content.startswith('$!completed'):
         puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
-        await message.channel.send('You have completed {} puzzles!')
+        await message.channel.send('You have completed {0.mention} puzzles!'.format(message.author.id))
 
 conn.close()
 
-client.run(os.getenv('TOKEN'))
+client.run(token)
