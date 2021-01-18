@@ -43,13 +43,14 @@ async def on_message(message):
         if len(username) == 1:
             puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = userid)
             puzzles_completed = puzzles_completed + 1
-            db.execute("UPDATE users SET puzzles_completed = :puzzles_completed WHERE user_id = :user_id ", puzzles_completed = puzzles_completed, user_id = message.author.id)
+            db.execute("UPDATE users SET puzzles_completed = :completed WHERE user_id = :user_id ", completed = puzzles_completed, user_id = userid)
             if roles[puzzles_completed]:
                 role = get(message.server.roles, name = roles[puzzles_completed])
                 await client.add_roles(message.author, role)            
             await message.channel.send('test')
         else:
             db.execute("INSERT INTO users (user_id) VALUES (:user_id, :puzzles_completed)", user_id = userid, puzzles_completed = 1)
+            await message.channel.send('you have been added')
 
     if message.content.startswith('!completed'):
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
