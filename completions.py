@@ -53,10 +53,10 @@ async def on_message(message):
     if message.content.startswith('!completed'):
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = userid)
         if len(username) == 1:
-            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where user_id = :user_id", user_id = userid)
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users WHERE user_id = :user_id", user_id = userid)
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
-            await message.channel.send("You haven't completed any puzzles yet!")
+            await message.channel.send('You have not completed any puzzles yet!')
 
 conn.close()
 
