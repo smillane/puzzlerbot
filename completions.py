@@ -36,7 +36,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('!puzzlecomplete'):
-        await message.channel.send('Good job {}! Adding that to the records!'.format(message.author))
+        await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = message.author.id)
         if len(username) == 1:
             puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
@@ -49,8 +49,12 @@ async def on_message(message):
             db.execute("INSERT INTO users (user_id) VALUES (:user_id)", user_id = message.author.id)
 
     if message.content.startswith('!completed'):
-        puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
-        await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
+        username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = message.author.id)
+        if len(username) == 1:
+            puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
+            await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
+        else:
+            await message.channel.send("You haven't completed any puzzles yet!")
 
 conn.close()
 
