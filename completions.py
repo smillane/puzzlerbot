@@ -35,8 +35,8 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$!puzzlecomplete'):
-        await message.channel.send('Good job {0.mention}! Adding that to the records!'.format(message.author.id))
+    if message.content.startswith('!puzzlecomplete'):
+        await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.id))
         puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
         puzzles_completed = puzzles_completed + 1
         if roles[puzzles_completed]:
@@ -44,9 +44,9 @@ async def on_message(message):
             await client.add_roles(message.author, role)
         db.execute("UPDATE users SET puzzles_completed = :puzzles_completed WHERE user_id = :user_id ", puzzles_completed = puzzles_completed, user_id = message.author.id)
 
-    if message.content.startswith('$!completed'):
+    if message.content.startswith('!completed'):
         puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
-        await message.channel.send('You have completed {0.mention} puzzles!'.format(message.author.id))
+        await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
 
 conn.close()
 
