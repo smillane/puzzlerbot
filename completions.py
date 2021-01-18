@@ -38,7 +38,7 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author))
         username = db.execute("SELECT * FROM users WHERE user_id = :user_id", user_id = message.author.id)
-        if len(username) = 1:
+        if len(username) == 1:
             puzzles_completed = db.execute("SELECT puzzles_completed FROM users where username = :user_id", user_id = message.author.id)
             puzzles_completed = puzzles_completed + 1
             if roles[puzzles_completed]:
