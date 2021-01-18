@@ -61,7 +61,7 @@ async def on_message(message):
     if message.content.startswith('!completed'):
         db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
         puzzles_completed = db.fetchone()
-        if puzzles_completed:
+        if puzzles_completed > 0:
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
