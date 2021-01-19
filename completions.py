@@ -17,7 +17,7 @@ conn = psycopg2.connect(**params)
 
 db = conn.cursor()
 
-db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 0);""")
+db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL, puzzles_completed INTEGER NOT NULL DEFAULT 1);""")
 
 roles = {10:'Novice Puzzler', 50:'Apprentice Puzzler', 100:'Intermediate Puzzler', 300:'Proficient Puzzler', 600:'Expert Puzzler', 1000:'Master Puzzler'}
 
@@ -44,10 +44,10 @@ async def on_message(message):
         
         db.execute("""
         INSERT INTO users (user_id, puzzles_completed) 
-        VALUES (%s, %s) 
+        VALUES (%s) 
         ON CONFLICT (user_id) 
         DO 
-            UPDATE SET puzzles_completed = puzzles_completed + 1;""", (userid, 1))
+            UPDATE SET puzzles_completed = puzzles_completed + 1;""", (userid,))
         conn.commit()
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
 
