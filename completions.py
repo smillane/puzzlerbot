@@ -43,11 +43,11 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         db.execute("""
-        INSERT INTO users (user_id) 
-        VALUES (%s) 
+        INSERT INTO users (user_id, puzzles_completed) 
+        VALUES (%s, %s) 
         ON CONFLICT (user_id) 
         DO 
-            UPDATE SET puzzles_completed = puzzles_completed + 1;""", (userid,))
+            UPDATE SET puzzles_completed = puzzles_completed + 1;""", (userid, 1))
         conn.commit()
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
 
