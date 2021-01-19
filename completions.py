@@ -42,14 +42,14 @@ async def on_message(message):
 
     if message.content.startswith('!puzzlecomplete'):
         
-        await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
         db.execute("""INSERT INTO users (user_id) VALUES (%s) ON CONFLICT (user_id) DO UPDATE SET puzzles_completed = puzzles_completed +1;""", (userid))
+        conn.commit()
+        await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
 
     if message.content.startswith('!completed'):
         db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
-        puzzles_completed = db.fetchone()
+        puzzles_completed = db.fetchone()[0]
         if puzzles_completed > 0:
-            puzzles_completed = db.fetchone()
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
