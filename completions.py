@@ -21,7 +21,7 @@ db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL UNIQUE, 
 
 roles = {5:'Novice Puzzler', 10:'Apprentice Puzzler', 15:'Intermediate Puzzler', 20:'Proficient Puzzler', 25:'Expert Puzzler', 30:'Master Puzzler'}
 
-client = discord.Client())
+client = discord.Client()
 
 @client.event
 async def on_ready():
