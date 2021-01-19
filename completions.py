@@ -1,5 +1,6 @@
 import discord
 import psycopg2
+from discord import guild
 from discord.utils import get
 from config import config
 
@@ -53,8 +54,8 @@ async def on_message(message):
         puzzles_completed = db.fetchone()[0]
         if puzzles_completed in roles:
             name = roles[puzzles_completed]
-            role = get(message.author.guild.roles, name=name)
-            await message.author.add_roles(message.author, guild.get_role(role))
+            role = get(message.author.guild.roles.id, name=name)
+            await message.author.add_roles(message.author, role)
             await message.channel.send('Congrats on the new role!!!')
 
     if message.content.startswith('!completed'):
