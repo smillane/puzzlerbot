@@ -52,7 +52,7 @@ async def on_message(message):
         db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
         puzzles_completed = db.fetchone()[0]
         if puzzles_completed in roles:
-            role = get(message.server.roles, name=roles[puzzles_completed])
+            role = discord.utils.get(userid.server.roles, name=roles[puzzles_completed])
             await discord.Member.add_roles(userid, role)
             await message.channel.send('Congrats on the new role!!!')
 
