@@ -19,9 +19,9 @@ db = conn.cursor()
 
 db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL UNIQUE, puzzles_completed INTEGER NOT NULL DEFAULT 1);""")
 
-roles = {10:'Novice Puzzler', 50:'Apprentice Puzzler', 100:'Intermediate Puzzler', 300:'Proficient Puzzler', 600:'Expert Puzzler', 1000:'Master Puzzler'}
+roles = {5:'Novice Puzzler', 10:'Apprentice Puzzler', 15:'Intermediate Puzzler', 20:'Proficient Puzzler', 25:'Expert Puzzler', 30:'Master Puzzler'}
 
-client = discord.Client()
+client = discord.Client())
 
 @client.event
 async def on_ready():
@@ -53,8 +53,8 @@ async def on_message(message):
         puzzles_completed = db.fetchone()[0]
         if puzzles_completed in roles:
             name = roles[puzzles_completed]
-            role = discord.utils.get(userid.server.roles, name=name)
-            await discord.Member.add_roles(userid, role)
+            role = discord.utils.get(message.guild.roles, name=name)
+            await message.author.add_role(role)
             await message.channel.send('Congrats on the new role!!!')
 
     if message.content.startswith('!completed'):
