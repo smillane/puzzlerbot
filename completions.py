@@ -51,7 +51,7 @@ async def on_message(message):
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
         db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
         puzzles_completed = db.fetchone()[0]
-        if roles[puzzles_completed]:
+        if puzzles_completed in roles:
             role = get(message.server.roles, name=roles[puzzles_completed])
             await userid.add_roles(role)
         await message.channel.send('Congrats on the new role!!!')
