@@ -54,7 +54,7 @@ async def on_message(message):
         if puzzles_completed in roles:
             name = roles[puzzles_completed]
             role = discord.utils.get(message.guild.roles, name=name)
-            await message.author.add_role(role)
+            await userid.add_roles(role)
             await message.channel.send('Congrats on the new role!!!')
 
     if message.content.startswith('!completed'):
