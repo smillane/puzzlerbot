@@ -54,7 +54,7 @@ async def on_message(message):
         puzzles_completed = db.fetchone()[0]
         if puzzles_completed in roles:
             name = roles[puzzles_completed]
-            role = get(message.author.guild.get_role(name))
+            role = guild.get_role(name)
             await message.author.add_roles(message.author, role=role)
             await message.channel.send('Congrats on the new role!!!')
 
