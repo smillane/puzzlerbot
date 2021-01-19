@@ -54,7 +54,7 @@ async def on_message(message):
         if puzzles_completed in roles:
             role = get(message.server.roles, name=roles[puzzles_completed])
             await userid.add_roles(role)
-        await message.channel.send('Congrats on the new role!!!')
+            await message.channel.send('Congrats on the new role!!!')
 
     if message.content.startswith('!completed'):
         db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
