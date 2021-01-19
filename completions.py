@@ -43,7 +43,7 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         db.execute("""
-        INSERT INTO users (user_id, puzzles_completed) 
+        INSERT INTO users (user_id) 
         VALUES (%s) 
         ON CONFLICT (user_id) 
         DO 
