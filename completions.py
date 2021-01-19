@@ -17,7 +17,7 @@ conn = psycopg2.connect(**params)
 
 db = conn.cursor()
 
-db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL UNIQUE, puzzles_completed INTEGER NOT NULL DEFAULT 1);""")
+db.execute("""CREATE TABLE IF NOT EXISTS users (user_id BIGINT PRIMARY KEY, puzzles_completed INTEGER NOT NULL DEFAULT 1);""")
 
 roles = {5:'Novice Puzzler', 10:'Apprentice Puzzler', 15:'Intermediate Puzzler', 20:'Proficient Puzzler', 25:'Expert Puzzler', 30:'Master Puzzler'}
 
@@ -43,8 +43,8 @@ async def on_message(message):
     if message.content.startswith('!puzzlecomplete'):
         
         db.execute("""
-        INSERT INTO users (user_id, puzzles_completed) 
-        VALUES (%s, 1) 
+        INSERT INTO users (user_id) 
+        VALUES (%s) 
         ON CONFLICT (user_id) DO 
         UPDATE SET puzzles_completed = users.puzzles_completed + 1;""", (userid,))
         conn.commit()
@@ -54,7 +54,7 @@ async def on_message(message):
         if puzzles_completed in roles:
             name = roles[puzzles_completed]
             role = get(message.author.guild.roles, name=name)
-            await client.add_roles(userid, role)
+            await userid.add_roles(userid, role)
             await message.channel.send('Congrats on the new role!!!')
 
     if message.content.startswith('!completed'):
