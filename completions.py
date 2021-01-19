@@ -46,8 +46,7 @@ async def on_message(message):
         INSERT INTO users (user_id) 
         VALUES (%s) 
         ON CONFLICT (user_id) 
-        DO 
-            UPDATE SET puzzles_completed = puzzles_completed + 1 WHERE user_id = (%s);""", (userid, userid,))
+        DO UPDATE SET puzzles_completed = puzzles_completed+1;""", (userid,))
         conn.commit()
         await message.channel.send('Good job {}! Adding that to the records!'.format(message.author.name))
 
