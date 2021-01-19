@@ -54,7 +54,7 @@ async def on_message(message):
         db.execute("""SELECT * FROM users WHERE user_id = %s""", (userid,))
         if db.fetchone():
             db.execute("""SELECT puzzles_completed FROM users WHERE user_id = %s""", (userid,))
-            puzzles_completed = db.fetchone()
+            puzzles_completed = db.fetchone()[0]
             await message.channel.send('You have completed {} puzzles!'.format(puzzles_completed))
         else:
             await message.channel.send('You have not completed any puzzles yet!')
